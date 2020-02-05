@@ -130,7 +130,7 @@ class Invoice extends AbstractItems
 
             // draw prices
             if ($this->canShowPriceInfo($childItem)) {
-                $price = $order->formatPriceTxt($childItem->getPrice());
+                $price = $order->formatPriceTxt($childItem->getPriceInclTax());
                 $line[] = ['text' => $price, 'feed' => 395, 'font' => 'bold', 'align' => 'right'];
                 $line[] = ['text' => $childItem->getQty() * 1, 'feed' => 435, 'font' => 'bold'];
 
