@@ -67,25 +67,13 @@ class LockGuardedCacheLoader
         callable $dataSaver
     ) {
         $cachedData = $dataLoader(); //optimistic read
-
-        while ($cachedData === false && $this->locker->isLocked($lockName)) {
-            usleep($this->delayTimeout * 1000);
-            $cachedData = $dataLoader();
-        }
-
         while ($cachedData === false) {
-            try {
-                if ($this->locker->lock($lockName, $this->lockTimeout / 1000)) {
-                    $data = $dataCollector();
-                    $dataSaver($data);
-                    $cachedData = $data;
-                }
-            } finally {
-                $this->locker->unlock($lockName);
-            }
+
+            $data = $dataCollector();
+            $dataSaver($data);
+            $cachedData = $data;
 
             if ($cachedData === false) {
-                usleep($this->delayTimeout * 1000);
                 $cachedData = $dataLoader();
             }
         }
@@ -102,15 +90,6 @@ class LockGuardedCacheLoader
      */
     public function lockedCleanData(string $lockName, callable $dataCleaner)
     {
-        while ($this->locker->isLocked($lockName)) {
-            usleep($this->delayTimeout * 1000);
-        }
-        try {
-            if ($this->locker->lock($lockName, $this->lockTimeout / 1000)) {
-                $dataCleaner();
-            }
-        } finally {
-            $this->locker->unlock($lockName);
-        }
+        $dataCleaner();
     }
 }
