@@ -56,7 +56,7 @@ class ProductCategoryCondition implements CustomConditionInterface
      */
     public function build(Filter $filter): string
     {
-        $categorySelect = $this->resourceConnection->getConnection()->select()
+        $categorySelect = $this->resourceConnection->getConnection()->select()->distinct()
             ->from(
                 ['cat' => $this->resourceConnection->getTableName('catalog_category_product')],
                 'cat.product_id'
@@ -71,8 +71,9 @@ class ProductCategoryCondition implements CustomConditionInterface
             'in' => $categorySelect
         ];
 
+        $ids = array_column($this->resourceConnection->getConnection()->query($categorySelect)->fetchAll(), 'product_id');
         return $this->resourceConnection->getConnection()
-            ->prepareSqlCondition(Collection::MAIN_TABLE_ALIAS . '.entity_id', $selectCondition);
+            ->prepareSqlCondition(Collection::MAIN_TABLE_ALIAS . '.entity_id', ['in' => $ids]);
     }
 
     /**
