@@ -786,7 +786,7 @@ class Sitemap extends \Magento\Framework\Model\AbstractModel implements \Magento
      */
     public function getSitemapUrl($sitemapPath, $sitemapFileName)
     {
-        return $this->_getStoreBaseDomain() . str_replace('//', '/', $sitemapPath . '/' . $sitemapFileName);
+        return str_replace('httpdocs', '', $this->_getStoreBaseDomain() . str_replace('//', '/', $sitemapPath . '/' . $sitemapFileName));
     }
 
     /**
