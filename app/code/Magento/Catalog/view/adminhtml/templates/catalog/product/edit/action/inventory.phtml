@@ -33,7 +33,7 @@
 $defaultMinSaleQty = $block->getDefaultConfigValue('min_sale_qty');
 if (!is_numeric($defaultMinSaleQty)) {
     $defaultMinSaleQty = json_decode($defaultMinSaleQty, true);
-    $defaultMinSaleQty = (float) $defaultMinSaleQty[\Magento\Customer\Api\Data\GroupInterface::CUST_GROUP_ALL] ?? 1;
+    $defaultMinSaleQty = (float) ($defaultMinSaleQty[\Magento\Customer\Api\Data\GroupInterface::CUST_GROUP_ALL] ?? 1);
 }
 ?>
 <div class="fieldset-wrapper form-inline advanced-inventory-edit">
