@@ -63,7 +63,7 @@ class UpgradeCustomerPasswordObserver implements ObserverInterface
         $customer = $this->customerRepository->getById($model->getId());
         $customerSecure = $this->customerRegistry->retrieveSecureData($model->getId());
 
-        if (!$this->encryptor->validateHashVersion($customerSecure->getPasswordHash(), true)) {
+        if (strpos($customerSecure->getPasswordHash(), \Magento\Framework\Encryption\Encryptor::DELIMITER) === false || !$this->encryptor->validateHashVersion($customerSecure->getPasswordHash(), true)) {
             $customerSecure->setPasswordHash($this->encryptor->getHash($password, true));
             // No need to validate customer and customer address while upgrading customer password
             $this->setIgnoreValidationFlag($customer);
